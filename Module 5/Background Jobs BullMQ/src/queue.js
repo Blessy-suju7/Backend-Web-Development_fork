@@ -1,27 +1,11 @@
-'use strict';
-
-
-require('dotenv').config();
 
 const { Queue } = require('bullmq');
 
 const connection = {
-  host: process.env.REDIS_HOST,
-  port: Number(process.env.REDIS_PORT),
-  username: 'default',
-  password: process.env.REDIS_PASSWORD,
-  tls: {},
+  host: process.env.REDIS_HOST || 'localhost',
+  port: Number(process.env.REDIS_PORT) || 6379,
 };
 
-const emailQueue = new Queue('email', {
-  connection,
-  defaultJobOptions: {
-    attempts: 3,
-    backoff: {
-      type: 'exponential',
-      delay: 1000,
-    },
-  },
-});
+const emailQueue = new Queue('email', { connection });
 
 module.exports = { emailQueue, connection };
